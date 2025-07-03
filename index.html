@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BitLotto - Bitcoin Lottery</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#121212; color:#eee; margin:0; padding:0; }
+  header { background:#1e1e1e; padding:20px; text-align:center; }
+  h1 { margin:0; color:#f7931a; }
+  main { padding:20px; max-width:700px; margin: auto; }
+  label, select, input, button { display:block; width:100%; margin:10px 0; }
+  select, input, button { padding:10px; font-size:1em; }
+  button { background:#f7931a; border:none; color:#121212; font-weight:bold; cursor:pointer; }
+  button:hover { background:#ffa733; }
+  .ticket-info { margin:20px 0; }
+  .progress-bar { background:#333; border-radius:8px; overflow:hidden; height:24px; }
+  .progress { background:#f7931a; height:100%; width:0%; transition: width 0.5s ease; }
+  .payment-section { background:#1e1e1e; padding:15px; border-radius:8px; margin-top:20px; }
+  .payment-label { margin-top:0; font-weight:bold; }
+  .qr-code { text-align:center; margin:20px 0; }
+  footer { text-align:center; font-size:0.8em; color:#666; padding:20px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>BitLotto 🎟️ Bitcoin Lottery</h1>
+</header>
+<main>
+  <div class="ticket-info">
+    <label for="ticketCount">Number of Tickets (5 USD each):</label>
+    <input type="number" id="ticketCount" min="1" max="50" value="1" />
+  </div>
+
+  <div class="ticket-info">
+    <strong>Tickets Sold: <span id="ticketsSold">0</span> / 50000</strong>
+    <div class="progress-bar"><div class="progress" id="progressBar"></div></div>
+  </div>
+
+  <div>
+    <label for="emailInput">Email for ticket confirmation:</label>
+    <input type="email" id="emailInput" placeholder="you@example.com" required />
+  </div>
+
+  <div class="payment-section">
+    <label for="cryptoSelect" class="payment-label">Select Payment Cryptocurrency:</label>
+    <select id="cryptoSelect">
+      <option value="btc">Bitcoin (BTC)</option>
+      <option value="eth">Ethereum (ETH)</option>
+      <option value="usdt_eth">USDT (Ethereum)</option>
+      <option value="usdc_eth">USDC (Ethereum)</option>
+      <option value="shib">SHIB (Ethereum)</option>
+      <option value="sol">Solana (SOL)</option>
+      <option value="bnb_bep20">BNB (BEP20)</option>
+      <option value="twn">TWN (BEP20)</option>
+      <option value="trx">Tron (TRX)</option>
+      <option value="usdt_trx">USDT (Tron)</option>
+      <option value="usdc_trx">USDC (Tron)</option>
+      <option value="ton">Ton (TON)</option>
+      <option value="ousdt_ton">oUSDT (TON)</option>
+      <option value="oeth_ton">oETH (TON)</option>
+      <option value="ltc">Litecoin (LTC)</option>
+    </select>
+
+    <p class="payment-label">Send payment to this address:</p>
+    <strong id="cryptoAddress" style="word-break: break-all;"></strong>
+
+    <div class="qr-code">
+      <canvas id="qr"></canvas>
+    </div>
+  </div>
+
+  <button id="buyBtn">Buy Tickets</button>
+
+  <div id="message"></div>
+</main>
+<footer>
+  &copy; 2025 BitLotto. All rights reserved.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+  const ticketPriceUSD = 5;
+  const maxTickets = 50000;
+  let ticketsSold = 0;
+
+  const ticketCountInput = document.getElementById('ticketCount');
+  const ticketsSoldElem = document.getElementById('ticketsSold');
+  const progressBar = document.getElementById('progressBar');
+  const emailInput = document.getElementById('emailInput');
+  const buyBtn = document.getElementById('buyBtn');
+  const messageDiv = document.getElementById('message');
+  const cryptoSelect = document.getElementById('cryptoSelect');
+  const cryptoAddressElem = document.getElementById('cryptoAddress');
+  const qrCanvas = document.getElementById('qr');
+
+  const addresses = {
+    btc: 'bc1q4hm0lnm7emqwdskr4rwwg9z4wj82xg4aeuru0w',
+    eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    usdt_eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    usdc_eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    shib: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    sol: 'AuzpQkFfos3XPyTzY5ik3HuUpmpWtmvPVVtsUc5QKytJ',
+    bnb_bep20: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    twn: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    trx: 'THdiSDDWqtWrTzq3KJn35kYrWo3ZTP6yCu',
+    usdt_trx: 'THdiSDDWqtWrTzq3KJn35kYrWo3ZTP6yCu',
+    usdc_trx: 'THdiSDDWqtWrTzq3KJn35kYrWo3ZTP6yCu',
+    ton: 'UQCxhbxWfmQvGjDe98iR7YrysVHmBCyORAbl3U0YsK9y1F1N',
+    ousdt_ton: 'UQCxhbxWfmQvGjDe98iR7YrysVHmBCyORAbl3U0YsK9y1F1N',
+    oeth_ton: 'UQCxhbxWfmQvGjDe98iR7YrysVHmBCyORAbl3U0YsK9y1F1N',
+    ltc: 'ltc1qxk8598h9jlaxe4j7hkwvh3z57eft6ygdsue0my'
+  };
+
+  function updatePaymentInfo() {
+    const coin = cryptoSelect.value;
+    const addr = addresses[coin];
+    cryptoAddressElem.textContent = addr;
+
+    QRCode.toCanvas(qrCanvas, addr, { width: 180 }, function(error) {
+      if (error) console.error(error);
+    });
+  }
+
+  cryptoSelect.addEventListener('change', updatePaymentInfo);
+
+  function updateProgress() {
+    ticketsSoldElem.textContent = ticketsSold;
+    const percent = (ticketsSold / maxTickets) * 100;
+    progressBar.style.width = percent + '%';
+  }
+
+  updateProgress();
+  updatePaymentInfo();
+
+  buyBtn.addEventListener('click', () => {
+    const count = parseInt(ticketCountInput.value);
+    const email = emailInput.value.trim();
+    if (!email || !validateEmail(email)) {
+      messageDiv.textContent = 'Please enter a valid email address.';
+      messageDiv.style.color = 'red';
+      return;
+    }
+    if (isNaN(count) || count < 1) {
+      messageDiv.textContent = 'Please enter a valid number of tickets.';
+      messageDiv.style.color = 'red';
+      return;
+    }
+    if (ticketsSold + count > maxTickets) {
+      messageDiv.textContent = 'Not enough tickets left. Please reduce the number.';
+      messageDiv.style.color = 'red';
+      return;
+    }
+
+    const usdTotal = count * ticketPriceUSD;
+    let paymentAmountText = '';
+    if (cryptoSelect.value === 'btc') {
+      const btcPriceUSD = 20000;
+      const btcAmount = (usdTotal / btcPriceUSD).toFixed(8);
+      paymentAmountText = `<strong>${btcAmount} BTC</strong>`;
+    } else {
+      paymentAmountText = `equivalent of <strong>$${usdTotal.toFixed(2)}</strong> in selected crypto`;
+    }
+
+    messageDiv.style.color = 'green';
+    messageDiv.innerHTML = `
+      Please send ${paymentAmountText} to the address below.<br/>
+      After payment, your tickets will be confirmed via email: <strong>${email}</strong>.
+    `;
+
+    ticketsSold += count;
+    updateProgress();
+  });
+
+  function validateEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+</script>
+</body>
+</html>
