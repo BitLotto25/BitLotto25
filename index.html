@@ -5,144 +5,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BitLotto - Bitcoin Lottery</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: #eee;
-    margin: 0;
-    padding: 0;
-  }
+  body { font-family: Arial, sans-serif; background:#121212; color:#eee; margin:0; padding:0; }
 
   header {
-    background: #1e1e1e;
-    padding: 20px;
-    text-align: center;
+    background:#1e1e1e;
+    padding:10px 20px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 20px;
+    justify-content: space-between;
     flex-wrap: wrap;
+    text-align: center;
+  }
+
+  header h1 {
+    margin:10px 0 0;
+    color:#f7931a;
+    flex: 1 0 100%;
+    text-align: center;
   }
 
   .logo {
-    width: 64px;
-    height: 64px;
+    width: 96px;
+    height: 96px;
   }
 
-  h1 {
-    margin: 0;
-    color: #f7931a;
-    font-size: 1.8em;
-    flex: 1 1 100%;
-    text-align: center;
-  }
+  .left-logo { order: 1; }
+  .right-logo { order: 3; }
 
-  @media (min-width: 481px) {
-    header {
-      justify-content: space-between;
-    }
-
+  @media (max-width: 480px) {
     .logo {
-      width: 96px;
-      height: 96px;
+      width: 72px;
+      height: 72px;
     }
-
-    h1 {
-      flex: unset;
+    header h1 {
+      font-size: 1.4em;
     }
   }
 
-  .announcement {
-    background: #222;
-    padding: 10px 20px;
-    color: #f7931a;
-    font-weight: bold;
-    text-align: center;
-  }
-
-  main {
-    padding: 20px;
-    max-width: 700px;
-    margin: auto;
-  }
-
-  label,
-  select,
-  input,
-  button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-  }
-
-  select,
-  input,
-  button {
-    padding: 10px;
-    font-size: 1em;
-  }
-
-  button {
-    background: #f7931a;
-    border: none;
-    color: #121212;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background: #ffa733;
-  }
-
-  .ticket-info {
-    margin: 20px 0;
-  }
-
-  .progress-bar {
-    background: #333;
-    border-radius: 8px;
-    overflow: hidden;
-    height: 24px;
-  }
-
-  .progress {
-    background: #f7931a;
-    height: 100%;
-    width: 0%;
-    transition: width 0.5s ease;
-  }
-
-  .payment-section {
-    background: #1e1e1e;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 20px;
-  }
-
-  .payment-label {
-    margin-top: 0;
-    font-weight: bold;
-  }
-
-  .qr-code {
-    text-align: center;
-    margin: 20px 0;
-  }
-
-  footer {
-    text-align: center;
-    font-size: 0.8em;
-    color: #666;
-    padding: 20px;
-  }
+  .announcement { background:#222; padding:10px 20px; color:#f7931a; font-weight:bold; text-align:center; }
+  main { padding:20px; max-width:700px; margin: auto; }
+  label, select, input, button { display:block; width:100%; margin:10px 0; }
+  select, input, button { padding:10px; font-size:1em; }
+  button { background:#f7931a; border:none; color:#121212; font-weight:bold; cursor:pointer; }
+  button:hover { background:#ffa733; }
+  .ticket-info { margin:20px 0; }
+  .progress-bar { background:#333; border-radius:8px; overflow:hidden; height:24px; }
+  .progress { background:#f7931a; height:100%; width:0%; transition: width 0.5s ease; }
+  .payment-section { background:#1e1e1e; padding:15px; border-radius:8px; margin-top:20px; }
+  .payment-label { margin-top:0; font-weight:bold; }
+  .qr-code { text-align:center; margin:20px 0; }
+  footer { text-align:center; font-size:0.8em; color:#666; padding:20px; }
 </style>
 </head>
 <body>
 
 <header>
-  <img src="bitlotto-logo.png" alt="BitLotto Logo" class="logo">
+  <img src="bitlotto-logo.png" alt="BitLotto Logo" class="logo left-logo">
   <h1>BitLotto 🎟️ Bitcoin Lottery</h1>
-  <img src="bitlotto-logo.png" alt="BitLotto Logo" class="logo">
+  <img src="bitlotto-logo.png" alt="BitLotto Logo" class="logo right-logo">
 </header>
 
 <div class="announcement">
@@ -171,11 +91,19 @@
     <select id="cryptoSelect">
       <option value="btc">Bitcoin (BTC)</option>
       <option value="eth">Ethereum (ETH)</option>
-      <option value="usdt">USDT</option>
-      <option value="usdc">USDC</option>
-      <option value="ltc">Litecoin (LTC)</option>
-      <option value="bnb">BNB</option>
+      <option value="usdt_eth">USDT (Ethereum)</option>
+      <option value="usdc_eth">USDC (Ethereum)</option>
+      <option value="shib">SHIB (Ethereum)</option>
       <option value="sol">Solana (SOL)</option>
+      <option value="bnb_bep20">BNB (BEP20)</option>
+      <option value="twn">TWN (BEP20)</option>
+      <option value="trx">Tron (TRX)</option>
+      <option value="usdt_trx">USDT (Tron)</option>
+      <option value="usdc_trx">USDC (Tron)</option>
+      <option value="ton">Ton (TON)</option>
+      <option value="ousdt_ton">oUSDT (TON)</option>
+      <option value="oeth_ton">oETH (TON)</option>
+      <option value="ltc">Litecoin (LTC)</option>
     </select>
 
     <p class="payment-label">Send payment to this address:</p>
@@ -213,11 +141,19 @@
   const addresses = {
     btc: 'bc1q4hm0lnm7emqwdskr4rwwg9z4wj82xg4aeuru0w',
     eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    usdt: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    usdc: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    ltc: 'ltc1qxk8598h9jlaxe4j7hkwvh3z57eft6ygdsue0my',
-    bnb: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    sol: 'AuzpQkFfos3XPyTzY5ik3HuUpmpWtmvPVVtsUc5QKytJ'
+    usdt_eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    usdc_eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    shib: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    sol: 'AuzpQkFfos3XPyTzY5ik3HuUpmpWtmvPVVtsUc5QKytJ',
+    bnb_bep20: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    twn: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    trx: 'THdiSDDWqtWrTzq3KJn35kYrWo3ZTP6yCu',
+    usdt_trx: 'THdiSDDWqtWrTzq3KJn35kYrWo3ZTP6yCu',
+    usdc_trx: 'THdiSDDWqtWrTzq3KJn35kYrWo3ZTP6yCu',
+    ton: 'UQCxhbxWfmQvGjDe98iR7YrysVHmBCyORAbl3U0YsK9y1F1N',
+    ousdt_ton: 'UQCxhbxWfmQvGjDe98iR7YrysVHmBCyORAbl3U0YsK9y1F1N',
+    oeth_ton: 'UQCxhbxWfmQvGjDe98iR7YrysVHmBCyORAbl3U0YsK9y1F1N',
+    ltc: 'ltc1qxk8598h9jlaxe4j7hkwvh3z57eft6ygdsue0my'
   };
 
   function updatePaymentInfo() {
