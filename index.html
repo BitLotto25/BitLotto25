@@ -66,7 +66,7 @@
 </header>
 
 <div class="announcement">
-  🎉 1M in BTC! Grand Prize - Just $5 per Ticket!🎉 <br>
+  🎉 1 BTC! Grand Prize - Just $5 per Ticket!🎉 <br>
   🏆 Every 10,000 Tickets Sold: $10K! in BTC Raffle for 1 Lucky Winner!🏆
 </div>
 
@@ -77,7 +77,7 @@
   </div>
 
   <div class="ticket-info">
-    <strong>Tickets Sold: <span id="ticketsSold">0</span> / 1000000</strong>
+    <strong>Tickets Sold: <span id="ticketsSold">0</span> / 250000</strong>
     <div class="progress-bar"><div class="progress" id="progressBar"></div></div>
   </div>
 
@@ -125,7 +125,7 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script>
   const ticketPriceUSD = 5;
-  const maxTickets = 1000000;
+  const maxTickets = 250000;
   let ticketsSold = 0;
 
   const ticketCountInput = document.getElementById('ticketCount');
@@ -197,14 +197,7 @@
     }
 
     const usdTotal = count * ticketPriceUSD;
-    let paymentAmountText = '';
-    if (cryptoSelect.value === 'btc') {
-      const btcPriceUSD = 20000;
-      const btcAmount = (usdTotal / btcPriceUSD).toFixed(8);
-      paymentAmountText = `<strong>${btcAmount} BTC</strong>`;
-    } else {
-      paymentAmountText = `equivalent of <strong>$${usdTotal.toFixed(2)}</strong> in selected crypto`;
-    }
+    let paymentAmountText = `equivalent of <strong>$${usdTotal.toFixed(2)}</strong> in selected crypto`;
 
     messageDiv.style.color = 'green';
     messageDiv.innerHTML = `
