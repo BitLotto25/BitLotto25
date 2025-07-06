@@ -6,8 +6,32 @@
 <title>BitLotto - Bitcoin Lottery</title>
 <style>
   body { font-family: Arial, sans-serif; background:#121212; color:#eee; margin:0; padding:0; }
-  header { background:#1e1e1e; padding:20px; text-align:center; }
+  header {
+    background:#1e1e1e;
+    padding:20px;
+    text-align:center;
+    position:relative;
+  }
   h1 { margin:0; color:#f7931a; }
+  .logo {
+    position:absolute;
+    top:10px;
+    width:48px;
+    height:48px;
+  }
+  .left-logo {
+    left:10px;
+  }
+  .right-logo {
+    right:10px;
+  }
+  @media (max-width: 480px) {
+    .logo {
+      width:36px;
+      height:36px;
+    }
+  }
+
   .announcement { background:#222; padding:10px 20px; color:#f7931a; font-weight:bold; text-align:center; }
   main { padding:20px; max-width:700px; margin: auto; }
   label, select, input, button { display:block; width:100%; margin:10px 0; }
@@ -24,13 +48,17 @@
 </style>
 </head>
 <body>
+
 <header>
+  <img src="bitlotto-logo.png" alt="BitLotto Logo" class="logo left-logo">
   <h1>BitLotto 🎟️ Bitcoin Lottery</h1>
+  <img src="bitlotto-logo.png" alt="BitLotto Logo" class="logo right-logo">
 </header>
 
 <div class="announcement">
   🎉 1 BTC! Grand Prize - Just $5 per Ticket!🎉 <br>
-  🏆 Every 10,000 Tickets Sold: $10K! in BTC Raffle for 1 Lucky Winner!🏆</div>
+  🏆 Every 10,000 Tickets Sold: $10K! in BTC Raffle for 1 Lucky Winner!🏆
+</div>
 
 <main>
   <div class="ticket-info">
@@ -77,9 +105,9 @@
   </div>
 
   <button id="buyBtn">Buy Tickets</button>
-
   <div id="message"></div>
 </main>
+
 <footer>
   &copy; 2025 BitLotto. All rights reserved.
 </footer>
