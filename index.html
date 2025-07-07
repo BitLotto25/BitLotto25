@@ -1,62 +1,77 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BitLotto - Bitcoin Lottery</title>
-<style>
-  body { font-family: Arial, sans-serif; background:#121212; color:#eee; margin:0; padding:0; }
-
-  header {
-    background:#1e1e1e;
-    padding:10px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    text-align: center;
-  }
-
-  header h1 {
-    margin:10px 0 0;
-    color:#f7931a;
-    flex: 1 0 100%;
-    text-align: center;
-  }
-
-  .logo {
-    width: 96px;
-    height: 96px;
-  }
-
-  .left-logo { order: 1; }
-  .right-logo { order: 3; }
-
-  @media (max-width: 480px) {
-    .logo {
-      width: 72px;
-      height: 72px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BitLotto - Bitcoin Lottery</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#121212; color:#eee; margin:0; padding:0; }
+    header {
+      background:#1e1e1e;
+      padding:10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      text-align: center;
     }
     header h1 {
-      font-size: 1.4em;
+      margin:10px 0 0;
+      color:#f7931a;
+      flex: 1 0 100%;
+      text-align: center;
     }
-  }
+    .logo {
+      width: 96px;
+      height: 96px;
+    }
+    .left-logo { order: 1; }
+    .right-logo { order: 3; }
 
-  .announcement { background:#222; padding:10px 20px; color:#f7931a; font-weight:bold; text-align:center; }
-  main { padding:20px; max-width:700px; margin: auto; }
-  label, select, input, button { display:block; width:100%; margin:10px 0; }
-  select, input, button { padding:10px; font-size:1em; }
-  button { background:#f7931a; border:none; color:#121212; font-weight:bold; cursor:pointer; }
-  button:hover { background:#ffa733; }
-  .ticket-info { margin:20px 0; }
-  .progress-bar { background:#333; border-radius:8px; overflow:hidden; height:24px; }
-  .progress { background:#f7931a; height:100%; width:0%; transition: width 0.5s ease; }
-  .payment-section { background:#1e1e1e; padding:15px; border-radius:8px; margin-top:20px; }
-  .payment-label { margin-top:0; font-weight:bold; }
-  .qr-code { text-align:center; margin:20px 0; }
-  footer { text-align:center; font-size:0.8em; color:#666; padding:20px; }
-</style>
+    @media (max-width: 480px) {
+      .logo {
+        width: 72px;
+        height: 72px;
+      }
+      header h1 {
+        font-size: 1.4em;
+      }
+    }
+
+    .announcement {
+      background:#222;
+      padding:10px 20px;
+      color:#f7931a;
+      font-weight:bold;
+      text-align:center;
+    }
+    main { padding:20px; max-width:700px; margin: auto; }
+    label, select, input, button { display:block; width:100%; margin:10px 0; }
+    select, input, button { padding:10px; font-size:1em; }
+    button { background:#f7931a; border:none; color:#121212; font-weight:bold; cursor:pointer; }
+    button:hover { background:#ffa733; }
+    .ticket-info { margin:20px 0; }
+    .progress-bar { background:#333; border-radius:8px; overflow:hidden; height:24px; }
+    .progress { background:#f7931a; height:100%; width:0%; transition: width 0.5s ease; }
+    .payment-section { background:#1e1e1e; padding:15px; border-radius:8px; margin-top:20px; }
+    .payment-label { margin-top:0; font-weight:bold; }
+    .qr-code { text-align:center; margin:20px 0; }
+
+    #cryptoAddress {
+      font-size: 0.95em;
+      padding: 10px;
+      background: #111;
+      border-radius: 6px;
+      word-break: break-word;
+    }
+
+    footer {
+      text-align:center;
+      font-size:0.8em;
+      color:#666;
+      padding:20px;
+    }
+  </style>
 </head>
 <body>
 
@@ -67,8 +82,8 @@
 </header>
 
 <div class="announcement">
-  🎉 1M in BTC! Grand Prize - Just $5 per Ticket!🎉 <br>
-  🏆 Every 10,000 Tickets Sold: $10K! in BTC Raffle for 1 Lucky Winner!🏆
+  🎉 1M in BTC! Grand Prize - Just $5 per Ticket! 🎉<br>
+  🏆 Every 10,000 Tickets Sold: $10K BTC Bonus Draw for One Lucky Winner! 🏆
 </div>
 
 <main>
@@ -108,7 +123,7 @@
     </select>
 
     <p class="payment-label">Send payment to this address:</p>
-    <strong id="cryptoAddress" style="word-break: break-all;"></strong>
+    <strong id="cryptoAddress"></strong>
 
     <div class="qr-code">
       <canvas id="qr"></canvas>
@@ -181,6 +196,7 @@
   buyBtn.addEventListener('click', () => {
     const count = parseInt(ticketCountInput.value);
     const email = emailInput.value.trim();
+
     if (!email || !validateEmail(email)) {
       messageDiv.textContent = 'Please enter a valid email address.';
       messageDiv.style.color = 'red';
@@ -198,16 +214,22 @@
     }
 
     const usdTotal = count * ticketPriceUSD;
-    let paymentAmountText = `equivalent of <strong>$${usdTotal.toFixed(2)}</strong> in selected crypto`;
+    const cryptoLabel = cryptoSelect.options[cryptoSelect.selectedIndex].text;
+    const paymentAmountText = `<strong>$${usdTotal.toFixed(2)}</strong>`;
 
     messageDiv.style.color = 'green';
     messageDiv.innerHTML = `
-      Please send ${paymentAmountText} to the address below.<br/>
+      Please send ${paymentAmountText} worth of <strong>${cryptoLabel}</strong> to the address below.<br/>
       After payment, your tickets will be confirmed via email: <strong>${email}</strong>.
     `;
 
     ticketsSold += count;
     updateProgress();
+
+    // Optional: Lock input after purchase
+    ticketCountInput.disabled = true;
+    emailInput.disabled = true;
+    buyBtn.disabled = true;
   });
 
   function validateEmail(email) {
