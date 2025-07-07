@@ -1,292 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BitLotto - Bitcoin Lottery</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: #0d0d0d;
-    color: #f1f1f1;
-    margin: 0;
-    padding: 0;
-  }
+import React, { useEffect, useState } from 'react'; import QRCode from 'qrcode';
 
-  header {
-    background: linear-gradient(135deg, #1e1e1e, #292929);
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  }
+const cryptoAddresses = { btc: 'bc1q4hm0lnm7emqwdskr4rwwg9z4wj82xg4aeuru0w', eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520', usdt_eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520', usdc_eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520', shib: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520', sol: 'AuzpQkFfos3XPyTzY5ik3HuUpmpWtmvPVVtsUc5QKytJ', bnb_bep20: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520', trx: 'THdiSDDWqtWrTzq3KJn35kYrWo3ZTP6yCu', ton: 'UQCxhbxWfmQvGjDe98iR7YrysVHmBCyORAbl3U0YsK9y1F1N', ltc: 'ltc1qxk8598h9jlaxe4j7hkwvh3z57eft6ygdsue0my', };
 
-  header h1 {
-    color: #ffa500;
-    font-size: 2rem;
-    margin: 10px 0;
-    flex: 1 0 100%;
-  }
+const BitLotto = () => { const [ticketsSold, setTicketsSold] = useState(0); const [ticketCount, setTicketCount] = useState(1); const [email, setEmail] = useState(''); const [crypto, setCrypto] = useState('btc'); const [message, setMessage] = useState(''); const [theme, setTheme] = useState('dark');
 
-  .logo {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-  }
+const maxTickets = 1000000; const ticketPrice = 5;
 
-  .announcement {
-    background: #1a1a1a;
-    padding: 15px 20px;
-    color: #00c2ff;
-    font-weight: bold;
-    text-align: center;
-    font-size: 1.1em;
-    border-bottom: 2px solid #222;
-  }
+useEffect(() => { generateQR(cryptoAddresses[crypto]); }, [crypto]);
 
-  main {
-    padding: 30px 20px;
-    max-width: 720px;
-    margin: auto;
-  }
+const generateQR = async (address) => { const canvas = document.getElementById('qr'); await QRCode.toCanvas(canvas, address, { width: 180 }); };
 
-  .ticket-info, .payment-section {
-    background: #1e1e1e;
-    border-radius: 12px;
-    padding: 20px;
-    margin: 20px 0;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  }
+const handleBuy = () => { if (!/\S+@\S+.\S+/.test(email)) { setMessage('Please enter a valid email.'); return; } if (ticketsSold + ticketCount > maxTickets) { setMessage('Not enough tickets left.'); return; } setTicketsSold(ticketsSold + ticketCount); setMessage(Send $${(ticketCount * ticketPrice).toFixed(2)} in ${crypto.toUpperCase()} to: ${cryptoAddresses[crypto]}); };
 
-  label {
-    margin-bottom: 8px;
-    display: block;
-    font-weight: 600;
-  }
+return ( <div className={min-h-screen p-4 transition-all duration-500 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}}> <header className="text-center py-6"> <h1 className="text-4xl font-bold text-orange-400">BitLotto 🎟️ Bitcoin Lottery</h1> <p className="text-sm mt-2">🎉 $1M Grand Prize • Bonus Draw: $10K Every 10,000 Tickets 🎉</p> <button className="mt-4 px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-500 transition" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} > Toggle {theme === 'dark' ? 'Light' : 'Dark'} Theme </button> </header>
 
-  select, input[type="email"], input[type="number"] {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #444;
-    background: #2a2a2a;
-    color: #fff;
-    margin-top: 5px;
-    font-size: 1em;
-  }
+<main className="max-w-xl mx-auto space-y-6">
+    <div className="bg-opacity-20 rounded-lg p-6 shadow-lg bg-gray-800">
+      <label className="font-semibold">Number of Tickets ($5 each):</label>
+      <input
+        type="number"
+        className="w-full mt-1 p-2 rounded bg-gray-700 text-white"
+        value={ticketCount}
+        onChange={(e) => setTicketCount(Number(e.target.value))}
+        min="1"
+        max="50"
+      />
+    </div>
 
-  button {
-    background: linear-gradient(135deg, #ffa500, #ff7b00);
-    border: none;
-    color: #000;
-    padding: 14px;
-    font-weight: bold;
-    font-size: 1em;
-    border-radius: 8px;
-    cursor: pointer;
-    width: 100%;
-    transition: background 0.3s ease, transform 0.2s;
-  }
+    <div className="bg-opacity-20 rounded-lg p-6 shadow-lg bg-gray-800">
+      <strong>Tickets Sold: {ticketsSold} / {maxTickets}</strong>
+      <div className="w-full h-4 bg-gray-600 rounded mt-2 overflow-hidden">
+        <div
+          className="h-full bg-orange-400 transition-all duration-500"
+          style={{ width: `${(ticketsSold / maxTickets) * 100}%` }}
+        ></div>
+      </div>
+    </div>
 
-  button:hover {
-    background: linear-gradient(135deg, #ffcc66, #ffaa00);
-    transform: translateY(-1px);
-  }
+    <div className="bg-opacity-20 rounded-lg p-6 shadow-lg bg-gray-800">
+      <label className="font-semibold">Email Address:</label>
+      <input
+        type="email"
+        className="w-full mt-1 p-2 rounded bg-gray-700 text-white"
+        placeholder="you@example.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+    </div>
 
-  .progress-bar {
-    background: #333;
-    border-radius: 12px;
-    overflow: hidden;
-    height: 20px;
-    margin-top: 10px;
-  }
+    <div className="bg-opacity-20 rounded-lg p-6 shadow-lg bg-gray-800">
+      <label className="font-semibold">Select Crypto:</label>
+      <select
+        className="w-full mt-1 p-2 rounded bg-gray-700 text-white"
+        value={crypto}
+        onChange={(e) => setCrypto(e.target.value)}
+      >
+        {Object.keys(cryptoAddresses).map((key) => (
+          <option key={key} value={key}>{key.toUpperCase()}</option>
+        ))}
+      </select>
 
-  .progress {
-    background: linear-gradient(90deg, #ffa500, #f7931a);
-    height: 100%;
-    width: 0%;
-    transition: width 0.5s ease;
-  }
+      <p className="mt-3 font-semibold">Payment Address:</p>
+      <p className="break-all text-orange-400 font-mono">{cryptoAddresses[crypto]}</p>
 
-  .qr-code {
-    text-align: center;
-    margin: 20px 0;
-  }
+      <div className="mt-4 text-center">
+        <canvas id="qr" className="mx-auto"></canvas>
+      </div>
+    </div>
 
-  footer {
-    text-align: center;
-    font-size: 0.9em;
-    color: #888;
-    padding: 20px;
-    background: #111;
-    border-top: 1px solid #222;
-  }
+    <button
+      onClick={handleBuy}
+      className="w-full py-3 bg-orange-500 hover:bg-orange-400 text-black font-bold rounded shadow-lg transition duration-300"
+    >
+      Buy Tickets
+    </button>
 
-  #message {
-    margin-top: 20px;
-    font-weight: bold;
-  }
+    {message && <p className="mt-4 text-center font-semibold text-green-400">{message}</p>}
+  </main>
 
-  @media (max-width: 600px) {
-    .logo {
-      width: 64px;
-      height: 64px;
-    }
-
-    header h1 {
-      font-size: 1.5rem;
-    }
-
-    main {
-      padding: 20px 10px;
-    }
-  }
-</style>
-</head>
-<body>
-
-<header>
-  <img src="bitlotto-logo.png" alt="BitLotto Logo" class="logo">
-  <h1>BitLotto 🎟️ Bitcoin Lottery</h1>
-</header>
-
-<div class="announcement">
-  🎉 $1M in BTC Grand Prize! 🎉<br />
-  🧨 Every 10,000 Tickets Sold = $10K BTC Bonus Draw for 1 Lucky Winner! 🧨
+  <footer className="mt-10 text-center text-sm text-gray-500">
+    &copy; 2025 BitLotto. All rights reserved.
+  </footer>
 </div>
 
-<main>
-  <div class="ticket-info">
-    <label for="ticketCount">Number of Tickets ($5 each):</label>
-    <input type="number" id="ticketCount" min="1" max="50" value="1" />
-  </div>
+); };
 
-  <div class="ticket-info">
-    <strong>Tickets Sold: <span id="ticketsSold">0</span> / 1,000,000</strong>
-    <div class="progress-bar"><div class="progress" id="progressBar"></div></div>
-  </div>
+export default BitLotto;
 
-  <div class="ticket-info">
-    <label for="emailInput">Email for Confirmation:</label>
-    <input type="email" id="emailInput" placeholder="you@example.com" required />
-  </div>
-
-  <div class="payment-section">
-    <label for="cryptoSelect">Choose Payment Method:</label>
-    <select id="cryptoSelect"></select>
-
-    <p class="payment-label">Send to this address:</p>
-    <strong id="cryptoAddress" style="word-break: break-all;"></strong>
-
-    <div class="qr-code">
-      <canvas id="qr"></canvas>
-    </div>
-  </div>
-
-  <button id="buyBtn">Buy Tickets</button>
-  <div id="message"></div>
-</main>
-
-<footer>
-  &copy; 2025 BitLotto. All rights reserved.
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-<script>
-  const ticketPriceUSD = 5;
-  const maxTickets = 1000000;
-  let ticketsSold = 0;
-
-  const addresses = {
-    btc: 'bc1q4hm0lnm7emqwdskr4rwwg9z4wj82xg4aeuru0w',
-    eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    usdt_eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    usdc_eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    shib: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    sol: 'AuzpQkFfos3XPyTzY5ik3HuUpmpWtmvPVVtsUc5QKytJ',
-    bnb_bep20: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    twn: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    trx: 'THdiSDDWqtWrTzq3KJn35kYrWo3ZTP6yCu',
-    usdt_trx: 'THdiSDDWqtWrTzq3KJn35kYrWo3ZTP6yCu',
-    usdc_trx: 'THdiSDDWqtWrTzq3KJn35kYrWo3ZTP6yCu',
-    ton: 'UQCxhbxWfmQvGjDe98iR7YrysVHmBCyORAbl3U0YsK9y1F1N',
-    ousdt_ton: 'UQCxhbxWfmQvGjDe98iR7YrysVHmBCyORAbl3U0YsK9y1F1N',
-    oeth_ton: 'UQCxhbxWfmQvGjDe98iR7YrysVHmBCyORAbl3U0YsK9y1F1N',
-    ltc: 'ltc1qxk8598h9jlaxe4j7hkwvh3z57eft6ygdsue0my'
-  };
-
-  const ticketCountInput = document.getElementById('ticketCount');
-  const ticketsSoldElem = document.getElementById('ticketsSold');
-  const progressBar = document.getElementById('progressBar');
-  const emailInput = document.getElementById('emailInput');
-  const buyBtn = document.getElementById('buyBtn');
-  const messageDiv = document.getElementById('message');
-  const cryptoSelect = document.getElementById('cryptoSelect');
-  const cryptoAddressElem = document.getElementById('cryptoAddress');
-  const qrCanvas = document.getElementById('qr');
-
-  function populateCryptoOptions() {
-    for (let [key, value] of Object.entries(addresses)) {
-      const option = document.createElement('option');
-      option.value = key;
-      option.textContent = key.toUpperCase().replace(/_/g, ' ');
-      cryptoSelect.appendChild(option);
-    }
-  }
-
-  function updatePaymentInfo() {
-    const coin = cryptoSelect.value;
-    const addr = addresses[coin];
-    cryptoAddressElem.textContent = addr;
-    QRCode.toCanvas(qrCanvas, addr, { width: 180 }, err => {
-      if (err) console.error(err);
-    });
-  }
-
-  function updateProgress() {
-    ticketsSoldElem.textContent = ticketsSold;
-    const percent = (ticketsSold / maxTickets) * 100;
-    progressBar.style.width = percent + '%';
-  }
-
-  buyBtn.addEventListener('click', () => {
-    const count = parseInt(ticketCountInput.value);
-    const email = emailInput.value.trim();
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      messageDiv.textContent = 'Please enter a valid email address.';
-      messageDiv.style.color = 'red';
-      return;
-    }
-    if (isNaN(count) || count < 1) {
-      messageDiv.textContent = 'Please enter a valid number of tickets.';
-      messageDiv.style.color = 'red';
-      return;
-    }
-    if (ticketsSold + count > maxTickets) {
-      messageDiv.textContent = 'Not enough tickets left.';
-      messageDiv.style.color = 'red';
-      return;
-    }
-
-    const usdTotal = count * ticketPriceUSD;
-    const paymentAmountText = `equivalent of <strong>$${usdTotal.toFixed(2)}</strong> in selected crypto`;
-    messageDiv.style.color = '#0f0';
-    messageDiv.innerHTML = `
-      Please send ${paymentAmountText} to the address above.<br />
-      Confirmation will be sent to: <strong>${email}</strong>
-    `;
-    ticketsSold += count;
-    updateProgress();
-  });
-
-  cryptoSelect.addEventListener('change', updatePaymentInfo);
-  populateCryptoOptions();
-  updatePaymentInfo();
-  updateProgress();
-</script>
-</body>
-</html>
