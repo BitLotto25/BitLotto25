@@ -5,195 +5,173 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BitLotto25 - Crypto Lottery</title>
 <style>
-  body { font-family: Arial, sans-serif; background:#121212; color:#eee; margin:0; padding:0; }
-  header {
-    background:#1e1e1e;
-    padding:10px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    text-align: center;
-  }
-  .logo {
-    width: 64px;
-    height: 64px;
-    margin-right: 12px;
-  }
-  header h1 {
-    margin: 0;
-    font-size: 2em;
-    color:#f7931a;
-  }
-  .subtitle {
-    font-size: 0.9em;
-    color: #ccc;
-    margin-top: 4px;
-  }
-  @media (max-width: 480px) {
-    .logo {
-      width: 48px;
-      height: 48px;
-      margin-right: 8px;
-    }
-    header h1 {
-      font-size: 1.4em;
-    }
-    .subtitle {
-      font-size: 0.8em;
-    }
-  }
-
-  .announcement { background:#222; padding:10px 20px; color:#f7931a; font-weight:bold; text-align:center; }
-  main { padding:20px; max-width:700px; margin: auto; }
-  label, select, input, button { display:block; width:100%; margin:10px 0; }
-  select, input, button { padding:10px; font-size:1em; }
-  button { background:#f7931a; border:none; color:#121212; font-weight:bold; cursor:pointer; }
-  button:hover { background:#ffa733; }
-  .ticket-info { margin:20px 0; }
-  .progress-bar { background:#333; border-radius:8px; overflow:hidden; height:24px; }
-  .progress { background:#f7931a; height:100%; width:0%; transition: width 0.5s ease; }
-  .payment-section { background:#1e1e1e; padding:15px; border-radius:8px; margin-top:20px; }
-  .payment-label { margin-top:0; font-weight:bold; }
-  .qr-code { text-align:center; margin:20px 0; }
-  footer { text-align:center; font-size:0.8em; color:#666; padding:20px; }
+  body { font-family: Arial, sans-serif; background:#121212; color:#eee; margin:0; padding:0; }
+  header {
+    background:#1e1e1e;
+    padding:10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+  .logo {
+    width: 64px;
+    height: 64px;
+    margin-right: 12px;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 2em;
+    color:#f7931a;
+  }
+  .subtitle {
+    font-size: 0.9em;
+    color: #ccc;
+    margin-top: 4px;
+  }
+  @media (max-width: 480px) {
+    .logo {
+      width: 48px;
+      height: 48px;
+      margin-right: 8px;
+    }
+    header h1 {
+      font-size: 1.4em;
+    }
+    .subtitle {
+      font-size: 0.8em;
+    }
+  }
+  .announcement { background:#222; padding:10px 20px; color:#f7931a; font-weight:bold; text-align:center; }
+  main { padding:20px; max-width:700px; margin: auto; }
+  label, select, input, button { display:block; width:100%; margin:10px 0; }
+  select, input, button { padding:10px; font-size:1em; }
+  button { background:#f7931a; border:none; color:#121212; font-weight:bold; cursor:pointer; }
+  button:hover { background:#ffa733; }
+  .ticket-info { margin:20px 0; }
+  .progress-bar { background:#333; border-radius:8px; overflow:hidden; height:24px; }
+  .progress { background:#f7931a; height:100%; width:0%; transition: width 0.5s ease; }
+  .payment-section { background:#1e1e1e; padding:15px; border-radius:8px; margin-top:20px; }
+  .payment-label { margin-top:0; font-weight:bold; }
+  .qr-code { text-align:center; margin:20px 0; }
+  footer { text-align:center; font-size:0.8em; color:#666; padding:20px; }
 </style>
 </head>
 <body>
 <header>
-  <img src="bitlotto25-logo.png" alt="BitLotto25 Logo" class="logo">
-  <div>
-    <h1>BitLotto25</h1>
-    <div class="subtitle">Bitcoin Lottery</div>
-  </div>
+  <img src="bitlotto25-logo.png" alt="BitLotto25 Logo" class="logo">
+  <div>
+    <h1>BitLotto25</h1>
+    <div class="subtitle">Bitcoin Lottery</div>
+  </div>
 </header>
-
 <div class="announcement">
-  🎉 $1M BTC Grand Prize! Only $5 per Ticket! 🎉<br>
-  💰 Every 10,000 Tickets Sold = $10K Bonus Winner 💰
+  🎉 Win 1 BTC Grand Prize! Only $1 per Ticket! 🎉<br>
+  💰 Every 10,000 Tickets Sold = $1,000 Bonus Winner 💰
 </div>
-
 <main>
-  <div class="ticket-info">
-    <label for="ticketCount">Number of Tickets ($5 each):</label>
-    <input type="number" id="ticketCount" min="1" max="50" value="1" />
-  </div>
-
-  <div class="ticket-info">
-    <strong>Tickets Sold: <span id="ticketsSold">0</span> / 1000000</strong>
-    <div class="progress-bar"><div class="progress" id="progressBar"></div></div>
-  </div>
-
-  <div>
-    <label for="emailInput">Your Email for Confirmation:</label>
-    <input type="email" id="emailInput" placeholder="you@example.com" required />
-  </div>
-
-  <div class="payment-section">
-    <label for="cryptoSelect" class="payment-label">Choose Cryptocurrency:</label>
-    <select id="cryptoSelect">
-      <option value="btc">Bitcoin (BTC)</option>
-      <option value="eth">Ethereum (ETH)</option>
-      <option value="usdt_eth">USDT (Ethereum)</option>
-      <option value="bnb">BNB (BEP20)</option>
-      <option value="usdt_bnb">USDT (BEP20)</option>
-    </select>
-    <p class="payment-label">Send payment to this address:</p>
-    <strong id="cryptoAddress" style="word-break: break-all;"></strong>
-    <div class="qr-code">
-      <canvas id="qr"></canvas>
-    </div>
-  </div>
-
-  <button id="buyBtn">Buy Tickets</button>
-  <div id="message"></div>
+  <div class="ticket-info">
+    <label for="ticketCount">Number of Tickets ($1 each):</label>
+    <input type="number" id="ticketCount" min="1" max="50" value="1" />
+  </div>
+  <div class="ticket-info">
+    <strong>Tickets Sold: <span id="ticketsSold">0</span> / 1000000</strong>
+    <div class="progress-bar"><div class="progress" id="progressBar"></div></div>
+  </div>
+  <div>
+    <label for="emailInput">Your Email for Confirmation:</label>
+    <input type="email" id="emailInput" placeholder="you@example.com" required />
+  </div>
+  <div class="payment-section">
+    <label for="cryptoSelect" class="payment-label">Choose Cryptocurrency:</label>
+    <select id="cryptoSelect">
+      <option value="btc">Bitcoin (BTC)</option>
+      <option value="eth">Ethereum (ETH)</option>
+      <option value="usdt_eth">USDT (Ethereum)</option>
+      <option value="bnb">BNB (BEP20)</option>
+      <option value="usdt_bnb">USDT (BEP20)</option>
+    </select>
+    <p class="payment-label">Send payment to this address:</p>
+    <strong id="cryptoAddress" style="word-break: break-all;"></strong>
+    <div class="qr-code">
+      <canvas id="qr"></canvas>
+    </div>
+  </div>
+  <button id="buyBtn">Buy Tickets</button>
+  <div id="message"></div>
 </main>
-
 <footer>
-  &copy; 2025 BitLotto25. All rights reserved.
+  &copy; 2025 BitLotto25. All rights reserved.
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script>
-  const ticketPriceUSD = 5;
-  const maxTickets = 1000000;
-  let ticketsSold = 0;
-
-  const ticketCountInput = document.getElementById('ticketCount');
-  const ticketsSoldElem = document.getElementById('ticketsSold');
-  const progressBar = document.getElementById('progressBar');
-  const emailInput = document.getElementById('emailInput');
-  const buyBtn = document.getElementById('buyBtn');
-  const messageDiv = document.getElementById('message');
-  const cryptoSelect = document.getElementById('cryptoSelect');
-  const cryptoAddressElem = document.getElementById('cryptoAddress');
-  const qrCanvas = document.getElementById('qr');
-
-  const addresses = {
-    btc: 'bc1q4hm0lnm7emqwdskr4rwwg9z4wj82xg4aeuru0w',
-    eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    usdt_eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    bnb: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
-    usdt_bnb: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520'
-  };
-
-  function updatePaymentInfo() {
-    const coin = cryptoSelect.value;
-    const addr = addresses[coin];
-    cryptoAddressElem.textContent = addr;
-    QRCode.toCanvas(qrCanvas, addr, { width: 180 }, function(error) {
-      if (error) console.error(error);
-    });
-  }
-
-  function updateProgress() {
-    ticketsSoldElem.textContent = ticketsSold;
-    const percent = (ticketsSold / maxTickets) * 100;
-    progressBar.style.width = percent + '%';
-  }
-
-  buyBtn.addEventListener('click', () => {
-    const count = parseInt(ticketCountInput.value);
-    const email = emailInput.value.trim();
-
-    if (!email || !validateEmail(email)) {
-      messageDiv.textContent = 'Please enter a valid email address.';
-      messageDiv.style.color = 'red';
-      return;
-    }
-
-    if (isNaN(count) || count < 1) {
-      messageDiv.textContent = 'Please enter a valid number of tickets.';
-      messageDiv.style.color = 'red';
-      return;
-    }
-
-    if (ticketsSold + count > maxTickets) {
-      messageDiv.textContent = 'Not enough tickets left. Please reduce the number.';
-      messageDiv.style.color = 'red';
-      return;
-    }
-
-    const usdTotal = count * ticketPriceUSD;
-    let paymentAmountText = `equivalent of <strong>$${usdTotal.toFixed(2)}</strong> in selected crypto`;
-
-    messageDiv.style.color = 'green';
-    messageDiv.innerHTML = `
-      Please send ${paymentAmountText} to the address below.<br/>
-      After payment, your tickets will be confirmed via email: <strong>${email}</strong>.
-    `;
-
-    ticketsSold += count;
-    updateProgress();
-  });
-
-  function validateEmail(email) {
-    return /\S+@\S+\.\S+/.test(email);
-  }
-
-  updateProgress();
-  updatePaymentInfo();
-  cryptoSelect.addEventListener('change', updatePaymentInfo);
+  const ticketPriceUSD = 1;
+  const maxTickets = 1000000;
+  let ticketsSold = 0;
+  const ticketCountInput = document.getElementById('ticketCount');
+  const ticketsSoldElem = document.getElementById('ticketsSold');
+  const progressBar = document.getElementById('progressBar');
+  const emailInput = document.getElementById('emailInput');
+  const buyBtn = document.getElementById('buyBtn');
+  const messageDiv = document.getElementById('message');
+  const cryptoSelect = document.getElementById('cryptoSelect');
+  const cryptoAddressElem = document.getElementById('cryptoAddress');
+  const qrCanvas = document.getElementById('qr');
+  const addresses = {
+    btc: 'bc1q4hm0lnm7emqwdskr4rwwg9z4wj82xg4aeuru0w',
+    eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    usdt_eth: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    bnb: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520',
+    usdt_bnb: '0x5ed7e18ea9e00adabac4ab283e00946030b8c520'
+  };
+  function updatePaymentInfo() {
+    const coin = cryptoSelect.value;
+    const addr = addresses[coin];
+    cryptoAddressElem.textContent = addr;
+    QRCode.toCanvas(qrCanvas, addr, { width: 180 }, function(error) {
+      if (error) console.error(error);
+    });
+  }
+  function updateProgress() {
+    ticketsSoldElem.textContent = ticketsSold;
+    const percent = (ticketsSold / maxTickets) * 100;
+    progressBar.style.width = percent + '%';
+  }
+  buyBtn.addEventListener('click', () => {
+    const count = parseInt(ticketCountInput.value);
+    const email = emailInput.value.trim();
+    if (!email || !validateEmail(email)) {
+      messageDiv.textContent = 'Please enter a valid email address.';
+      messageDiv.style.color = 'red';
+      return;
+    }
+    if (isNaN(count) || count < 1) {
+      messageDiv.textContent = 'Please enter a valid number of tickets.';
+      messageDiv.style.color = 'red';
+      return;
+    }
+    if (ticketsSold + count > maxTickets) {
+      messageDiv.textContent = 'Not enough tickets left. Please reduce the number.';
+      messageDiv.style.color = 'red';
+      return;
+    }
+    const usdTotal = count * ticketPriceUSD;
+    let paymentAmountText = `equivalent of <strong>$${usdTotal.toFixed(2)}</strong> in selected crypto`;
+    messageDiv.style.color = 'green';
+    messageDiv.innerHTML = `
+      Please send ${paymentAmountText} to the address below.<br/>
+      After payment, your tickets will be confirmed via email: <strong>${email}</strong>.
+    `;
+    ticketsSold += count;
+    updateProgress();
+  });
+  function validateEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+  updateProgress();
+  updatePaymentInfo();
+  cryptoSelect.addEventListener('change', updatePaymentInfo);
 </script>
 </body>
 </html>
